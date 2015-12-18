@@ -6,10 +6,10 @@ Given a photograph taken off-axis of a planar subject, we can reverse the perspe
 
 <table border="0" style="width:80%;border:0px"> <tr style="border:0px">
     <td style="width:50%;border:0px">
-        <img src="tapestry.jpg" width="200px"/>
+        <img src="images/tapestry.jpg" width="200px"/>
     </td>
     <td style="width:50%;border:0px">
-        <img src="tapestry rectified.jpg" width="265px"/>
+        <img src="images/tapestry rectified.jpg" width="265px"/>
     </td>
 </tr> </table>
 
