@@ -196,27 +196,27 @@ div#notebook {
 <h3 id="The-subject-basis">The subject basis<a class="anchor-link" href="#The-subject-basis">&#182;</a></h3><p>For the subject basis, we first demarcate a rectangular area of interest and decide the dimensions of pixels in which we want this rectangle to be represented. The first basis vector of the <em>subject basis</em> goes horizontally from the center of the top-left corner pixel to the center of the pixel on its right. The next basis vector goes vertically from the top-left corner to the pixel below it. And the final basis vector goes from the camera center origin to the top-left corner pixel of the subject rectangle.</p>
 <h3 id="Overall-strategy">Overall strategy<a class="anchor-link" href="#Overall-strategy">&#182;</a></h3><p>Our coordinate translation relies on two transform operations. For any given point on the image plane, we want to transform between its coordinates $(p_0,p_1,p_2)$ in the camera basis and its coordinates $(u_0,u_1,u_2)$ in the subject basis. Change of basis is a matrix-multiplication operation. There exists a matrix $H$ such that 
 \[
-\begin{bmatrix} \ &amp; H &amp; \ &amp; &amp; \end{bmatrix} 
-\begin{bmatrix} p_0 \ p_1 \ p_2 \end{bmatrix} = 
-\begin{bmatrix} u_0 \ u_1 \ u_2 \end{bmatrix}
+\begin{bmatrix} \\ & H & \\ & & \end{bmatrix} 
+\begin{bmatrix} p_0 \\ p_1 \\ p_2 \end{bmatrix} = 
+\begin{bmatrix} u_0 \\ u_1 \\ u_2 \end{bmatrix}
 \]</p>
 <p>We also want to project from the origin through points $u$ on the image plane to points $v$ on the subject plane. That is, each pair of associated $u$ and $v$ points are lined up to the origin. Within the subject basis, this projection is a scaling operation. We know $v_2$ must $=1$, so 
 \[
-\begin{bmatrix} v_0 \ v_1 \ v_2 \end{bmatrix} = 
-\begin{bmatrix} u_0 \ u_1 \ u_2 \end{bmatrix} \;\times \displaystyle\frac{1}{\,u_2}
+\begin{bmatrix} v_0 \\ v_1 \\ v_2 \end{bmatrix} = 
+\begin{bmatrix} u_0 \\ u_1 \\ u_2 \end{bmatrix} \;\times \displaystyle\frac{1}{\,u_2}
 \]</p>
 <p>Because we don't know the values of the camera nor of the subject bases, we would compute $H$ by observing its effect on known points:
 \begin{equation}
 \begin{bmatrix} 
-    \color{Brown}{h<em>{u0,p0}} &amp; \color{Brown}{h</em>{u0,p1}} &amp; \color{Brown}{h<em>{u0,p2}} \ 
-    \color{Brown}{h</em>{u1,p0}} &amp; \color{Brown}{h<em>{u1,p1}} &amp; \color{Brown}{h</em>{u1,p2}} \ 
-    \color{Brown}{h<em>{u2,p0}} &amp; \color{Brown}{h</em>{u2,p1}} &amp; \color{Brown}{h_{u2,p2}} 
+    \color{Brown}{h_{u0,p0}} & \color{Brown}{h_{u0,p1}} & \color{Brown}{h_{u0,p2}} \\ 
+    \color{Brown}{h_{u1,p0}} & \color{Brown}{h_{u1,p1}} & \color{Brown}{h_{u1,p2}} \\ 
+    \color{Brown}{h_{u2,p0}} & \color{Brown}{h_{u2,p1}} & \color{Brown}{h_{u2,p2}} 
 \end{bmatrix} 
-\begin{bmatrix} \color{blue}{p_0} \ \color{blue}{p_1} \ 1 \end{bmatrix} = 
-\begin{bmatrix} \color{darkgray}{u_0} \ \color{darkgray}{u_1} \ \color{darkgray}{u_2} \end{bmatrix} = 
+\begin{bmatrix} \color{blue}{p_0} \\ \color{blue}{p_1} \\ 1 \end{bmatrix} = 
+\begin{bmatrix} \color{darkgray}{u_0} \\ \color{darkgray}{u_1} \\ \color{darkgray}{u_2} \end{bmatrix} = 
 \begin{bmatrix} 
-    \color{blue}{v_0}\cdot\color{darkgray}{u_2} \ \color{blue}{v_1}\cdot\color{darkgray}{u_2} \ \color{darkgray}{u_2} 
-\end{bmatrix} \tag{1} \
+    \color{blue}{v_0}\cdot\color{darkgray}{u_2} \\ \color{blue}{v_1}\cdot\color{darkgray}{u_2} \\ \color{darkgray}{u_2} 
+\end{bmatrix} \tag{1} \\
 \end{equation}</p>
 <p>Although we don't have access to $\color{darkgray}{u_0,u_1,u_2}$, we can observe that certain pixel coordinates $(\color{Blue}{p_0,p_1})$ are mapped to certain subject coordinates $(\color{Blue}{v_0,v_1})$. This implies certain relationships amongst the unknown entries of $\color{Brown}H$ that can be expressed in linear equations in these variables. When we have nine suitable such equations, we can solve the linear system for these nine entries.</p>
 <p>Let's see how this is done step by step.</p>
@@ -2296,13 +2296,11 @@ GMeJTnSiK9OJcZzoRCe6Mv0/Bo57NFTEZgUAAAAASUVORK5CYII=
 \[ \mathbf{w} \cdot \mathbf{\color{Brown}h} = b \]</p>
 <p>From matrix eq. (1), we can work out two linear equations for each corresponding pair of input and output coordinates:
 \begin{align}
-    \color{Blue}{p<em>0} h</em>{u0,p0} + \color{Blue}{p<em>1} h</em>{u0,p1} + h_{u0,p2}</p>
-
-<pre><code>- \color{Blue}{v_0}(\color{Blue}{p_0} h_{u2,p0} + \color{Blue}{p_1} h_{u2,p1} + h_{u2,p2}) &amp;= 0 \\ 
-\color{Blue}{p_0} h_{u1,p0} + \color{Blue}{p_1} h_{u1,p1} + h_{u1,p2} 
-- \color{Blue}{v_1}(\color{Blue}{p_0} h_{u2,p0} + \color{Blue}{p_1} h_{u2,p1} + h_{u2,p2}) &amp;= 0
-</code></pre>
-<p>\end{align}</p>
+    \color{Blue}{p_0} h_{u0,p0} + \color{Blue}{p_1} h_{u0,p1} + h_{u0,p2} 
+    - \color{Blue}{v_0}(\color{Blue}{p_0} h_{u2,p0} + \color{Blue}{p_1} h_{u2,p1} + h_{u2,p2}) &= 0 \\ 
+    \color{Blue}{p_0} h_{u1,p0} + \color{Blue}{p_1} h_{u1,p1} + h_{u1,p2} 
+    - \color{Blue}{v_1}(\color{Blue}{p_0} h_{u2,p0} + \color{Blue}{p_1} h_{u2,p1} + h_{u2,p2}) &= 0
+\end{align}
 
 </div>
 </div>
